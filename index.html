@@ -1,90 +1,96 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-<script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <title>Menu de Movilidad RA - CDMX</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<script type='text/javascript' src='https://raw.githack.com/AR-js-org/AR.js/3.4.7/three.js/build/ar-threex-location-only.js'></script>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
-<script type='text/javascript' src='https://raw.githack.com/AR-js-org/AR.js/3.4.7/aframe/build/aframe-ar.js'></script>
+    <style>
+        body { margin: 0; }
+        .mindar-ui-overlay { display: none; }
+    </style>
 
-<style>
-    button{
-        background-color: aquamarine;
-        border: none;
-        color: beige;
-        padding:7px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size:12 px;
-        margin: 4px 2px;
-        cursor:pointer ;
-        border-radius:12 px;
-        border: 2px solid salmon;
-        box-shadow:0 8px  16px 0 rgba(0,0,0,0.2) 0 6px 20px 0 rgba(0, 0,0,0.19);
-
-    }
-    .wrap {
-         border: solid 1px #ccc;
-         padding:10px;
-         text-align: center;
-    }
-
-    #output {
-        display: inline-block;
-        top: 4px;
-        position: relative;
-        border: dotted 1px #ccc;
-        padding: 2px;
-
-    }
-    .button {
-        border: solid 2px #ccc;
-        
-    }
-</style>
-
-<div style="position:  fixed ; top: 10px;  width:100%; text-align: center; z-index: 1;">
-    <button class="button" id="btn1">Model 1</button>
-    <button class="button" id="btn2">Model 2</button>
-    <button class="button" id="btn3">Model 3</button>
-
-
-</div>
-
-<body style="margin: 0px; overflow: hidden;">
-
-    <a-scene embedded arjs=" debugUIEnabled: false;"  vr-mode-ui=" enabled: false">
-        <a-marker preset="hiro">
-           <a-image id="entityID1" 
-         src="tarjeta.jpg" 
-         width="1" height="1"
-         position="0 0 0">
-         </a-image>
-
-            
-            
-        </a-marker>
-        <a-entity camera> </a-entity>
-    </a-scene>
     <script>
+        // FUNCION AL TOCAR UN BOTON
+        function handleButtonClick(transporte) {
+            alert('Has presionado el boton: ' + transporte + ' (Touch funcionando)');
+        }
 
-    document.getElementById("btn1").addEventListener("click", () => {
-    document.getElementById("entityID1").setAttribute(
-        "src", "ME_Linea7_2023_129x19.jpg"
-    );
-});
+        // COMPONENTE CLICK + TOUCHSTART
+        AFRAME.registerComponent('button-click-handler', {
+            init: function () {
+                const el = this.el;
 
+                const activar = () => {
+                    const transporte = el.getAttribute('data-transporte');
+                    if (transporte) {
+                        handleButtonClick(transporte);
+                    }
+                };
 
+                // PC
+                el.addEventListener('click', activar);
+
+                // CELULAR
+                el.addEventListener('touchstart', function (e) {
+                    e.preventDefault();
+                    activar();
+                });
+            }
+        });
     </script>
+</head>
 
-    
-    
+<body>
+
+    <a-scene mindar-image="imageTargetSrc: assets/tarjeta_cdmx.mind;"
+             vr-mode-ui="enabled: false"
+             device-orientation-permission-ui="enabled: true"
+             cursor="rayOrigin: none">
+
+        <a-camera position="0 0 0"></a-camera>
+
+        <a-entity mindar-image-target="targetIndex: 0">
+
+            <a-entity position="0 0.05 0">
+
+                <a-box class="clickable" data-transporte="RTP" button-click-handler
+                       position="-0.45 0.4 0.1" color="#D44646"
+                       width="0.25" height="0.1" depth="0.05">
+                    <a-text value="RTP" align="center" width="0.8"
+                            position="0 0 0.03" color="#FFF"></a-text>
+                </a-box>
+
+                <a-box class="clickable" data-transporte="METROBUS" button-click-handler
+                       position="0.45 0.4 0.1" color="#34A853"
+                       width="0.25" height="0.1" depth="0.05">
+                    <a-text value="METROBUS" align="center" width="0.8"
+                            position="0 0 0.03" color="#FFF"></a-text>
+                </a-box>
+
+                <a-box class="clickable" data-transporte="TREN LIGERO" button-click-handler
+                       position="-0.45 0.1 0.1" color="#4285F4"
+                       width="0.25" height="0.1" depth="0.05">
+                    <a-text value="TREN LIGERO" align="center" width="0.8"
+                            position="0 0 0.03" color="#FFF"></a-text>
+                </a-box>
+
+                <a-box class="clickable" data-transporte="CABLEBUS" button-click-handler
+                       position="0.45 0.1 0.1" color="#FBBC05"
+                       width="0.25" height="0.1" depth="0.05">
+                    <a-text value="CABLEBUS" align="center" width="0.8"
+                            position="0 0 0.03" color="#000"></a-text>
+                </a-box>
+
+            </a-entity>
+        </a-entity>
+
+    </a-scene>
+
+</body>
 </html>
 
+       
+   
